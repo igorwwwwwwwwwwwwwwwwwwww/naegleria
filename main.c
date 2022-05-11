@@ -5,6 +5,9 @@ int i = 0;
 
 int main() {
   system("stty -icanon");
-  i++;
+  while (!tape[i]) {
+    i++;
+  }
+  putchar(i);
   return 0;
 }
