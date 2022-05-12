@@ -6,7 +6,7 @@ build:
 run:
 	nerdctl run -it naegleria
 
-.PHONY: assemble
-assemble:
-	nerdctl build -t naegleria-assemble -f Dockerfile.assemble .
-	nerdctl run naegleria-assemble > main.s
+.PHONY: asm
+asm:
+	nerdctl build -t naegleria-asm -f Dockerfile.asm .
+	nerdctl run naegleria-asm > main.s
