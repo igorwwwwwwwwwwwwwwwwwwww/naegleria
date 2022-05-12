@@ -8,7 +8,7 @@ int main() {
   i = &tape;
   i++;
   //i--;
-  (*i)++;
+  //(*i)++;
   //(*i)--;
   putchar(*i);
   return 0;

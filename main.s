@@ -24,11 +24,8 @@ main:
 	adrp	x0, tape+4
 	add	x0, x0, :lo12:tape+4
 	str	x0, [x1, #:lo12:.LANCHOR0]
-	adrp	x1, tape
-	add	x1, x1, :lo12:tape
-	ldr	w0, [x1, 4]
-	add	w0, w0, 1
-	str	w0, [x1, 4]
+	adrp	x0, tape+4
+	ldr	w0, [x0, #:lo12:tape+4]
 	bl	putchar
 	mov	w0, 0
 	ldp	x29, x30, [sp], 16

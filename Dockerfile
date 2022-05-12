@@ -10,6 +10,3 @@ COPY --from=0 /usr/src/myapp/main.s .
 RUN gcc -c main.s -o myapp.o
 RUN gcc myapp.o -o myapp
 CMD ["./myapp"]
-
-# RUN gcc -g -S -O1 -g0 main.c
-# CMD ["cat", "main.s"]
