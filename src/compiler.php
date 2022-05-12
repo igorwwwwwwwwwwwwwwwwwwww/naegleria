@@ -78,10 +78,6 @@ function compile($tokens) {
                 yield ' bl	putchar';
                 break;
             case ',';
-                // larger CFI may be needed in template below for tmp storage w19
-                yield ' adrp	x0, .LC0';
-                yield ' add	x0, x0, :lo12:.LC0';
-                yield ' bl	system';
                 yield ' adrp	x0, i';
                 yield ' add	x0, x0, :lo12:i';
                 yield ' ldr	w19, [x0]';
