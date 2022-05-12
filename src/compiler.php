@@ -120,22 +120,8 @@ function compile($tokens) {
 
 const TEMPLATE = <<<'EOF'
     .arch armv8-a
-    .file	"main.c"
     .text
-    .global	tape
-    .bss
-    .align	3
-    .type	tape, %object
-    .size	tape, 20000
-tape:
-    .zero	20000
-    .global	i
-    .align	2
-    .type	i, %object
-    .size	i, 4
-i:
-    .zero	4
-    .section	.rodata
+    .section	.rodata.str1.8,"aMS",@progbits,1
     .align	3
 .LC0:
     .string	"stty -icanon"
@@ -144,12 +130,7 @@ i:
     .global	main
     .type	main, %function
 main:
-.LFB6:
-    .cfi_startproc
     stp	x29, x30, [sp, -16]!
-    .cfi_def_cfa_offset 16
-    .cfi_offset 29, -16
-    .cfi_offset 30, -8
     mov	x29, sp
     adrp	x0, .LC0
     add	x0, x0, :lo12:.LC0
@@ -157,15 +138,20 @@ main:
 $asm
     mov	w0, 0
     ldp	x29, x30, [sp], 16
-    .cfi_restore 30
-    .cfi_restore 29
-    .cfi_def_cfa_offset 0
     ret
-    .cfi_endproc
-.LFE6:
     .size	main, .-main
-    .ident	"GCC: (GNU) 10.3.0"
-    .section	.note.GNU-stack,"",@progbits
+    .global	i
+    .global	tape
+    .bss
+    .align	3
+    .type	i, %object
+    .size	i, 8
+i:
+    .zero	8
+    .type	tape, %object
+    .size	tape, 20000
+tape:
+    .zero	20000
 EOF;
 
 function template($asm) {
