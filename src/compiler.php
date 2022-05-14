@@ -29,32 +29,19 @@ function compile($tokens) {
 
         switch ($token) {
             case '>';
-                yield '        ;; >';
-                yield '        (local.set 0 (i32.add (local.get 0) (i32.const 1)))';
+                yield '        (local.set 0 (i32.add (local.get 0) (i32.const 1)))                         ;; >';
                 break;
             case '<';
-                yield '        ;; <';
-                yield '        (local.set 0 (i32.sub (local.get 0) (i32.const 1)))';
+                yield '        (local.set 0 (i32.sub (local.get 0) (i32.const 1)))                         ;; <';
                 break;
             case '+';
-                yield '        ;; +';
-                yield '        (i32.store (local.get 0) (i32.add (i32.load (local.get 0)) (i32.const 1)))';
+                yield '        (i32.store (local.get 0) (i32.add (i32.load (local.get 0)) (i32.const 1)))  ;; +';
                 break;
             case '-';
-                yield '        ;; -';
-                yield '        (i32.store (local.get 0) (i32.sub (i32.load (local.get 0)) (i32.const 1)))';
+                yield '        (i32.store (local.get 0) (i32.sub (i32.load (local.get 0)) (i32.const 1)))  ;; -';
                 break;
             case '.';
-                yield '        ;; .';
-                yield '        (i32.store (i32.const 0) (local.get 0))  ;; iov.iov_base';
-                yield '        (i32.store (i32.const 4) (i32.const 1))  ;; iov.iov_len';
-                yield '        (call $fd_write';
-                yield '            (i32.const 1) ;; file_descriptor - 1 for stdout';
-                yield '            (i32.const 0) ;; *iovs';
-                yield '            (i32.const 1) ;; iovs_len';
-                yield '            (i32.const 8) ;; nwritten';
-                yield '        )';
-                yield '        drop';
+                yield '        (call $putchar (local.get 0))                                               ;; .';
                 break;
             case ',';
                 yield '        ;; ,';
@@ -63,24 +50,18 @@ function compile($tokens) {
             case '[';
                 $loopId++;
                 $loopStack[] = $loopId;
-                yield '        ;; [';
-                yield "        (block \$loope$loopId";
-                yield "        (loop \$loops$loopId";
-                yield '        (i32.eqz (i32.load (local.get 0)))';
-                yield '        (if (then';
-                yield "          br \$loope$loopId";
-                yield '        ))';
+                yield "        (block \$loope$loopId                                                              ;; [";
+                yield "          (loop \$loops$loopId";
+                yield '            (i32.eqz (i32.load (local.get 0)))';
+                yield "            (if (then br \$loope$loopId))";
                 break;
             case ']';
                 $endLoopId = array_pop($loopStack);
-                yield '        ;; ]';
-                yield "        br \$loops$endLoopId";
-                yield '        )';
-                yield '        )';
+                yield "            br \$loops$endLoopId                                                              ;; ]";
+                yield '        ))';
                 break;
             case '!';
-                yield '        ;; !';
-                yield '        (call $proc_exit (i32.const 2))';
+                yield '        (call $proc_exit (i32.const 2))                                             ;; !';
                 break;
         }
     }
@@ -96,6 +77,16 @@ const TEMPLATE = <<<'EOF'
     ;; 00 iov.iov_base iov.iov_len
     ;; 08 nwritten token
     ;; 16 tape
+    (func $putchar (param i32)
+        (i32.store (i32.const 0) (local.get 0))  ;; iov.iov_base
+        (i32.store (i32.const 4) (i32.const 1))  ;; iov.iov_len
+        (call $fd_write
+            (i32.const 1) ;; file_descriptor - 1 for stdout
+            (i32.const 0) ;; *iovs
+            (i32.const 1) ;; iovs_len
+            (i32.const 8) ;; nwritten
+        )
+        drop)
     (func $main (export "_start")
         (local i32) ;; i
         (local.set 0 (i32.const 16))
