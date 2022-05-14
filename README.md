@@ -10,18 +10,20 @@ A [brainfuck](http://esolangs.org/wiki/Brainfuck) compiler written in PHP.
 
 You can use Naegleria to compile a brainfuck file into AT&T assembly. This can then be assembled using `gcc`, and executed directly.
 
-    $ bin/compile examples/hello.b > hello.s
+    $ bin/compile arm examples/hello.b > hello.s
     $ gcc -o hello hello.s
     $ ./hello
     Hello World!
 
 ## Platforms
 
-Targets 64-bit x86 on linux, specifically gcc.
+- linux 64-bit x86
+- linux aarch64
+- wasm (with WASI)
 
 ## Limitations
 
-The compiler uses a fixed-size array of 4000 elements for the cells.
+The compiler uses a fixed-size array of 4000 elements for the cells. Good luck!
 
 ## Performance
 
