@@ -15,7 +15,21 @@ function compile($tokens) {
     $loopId = 0;
     $loopStack = [];
     foreach ($tokens as $token) {
-        yield '        (i32.store (i32.const 12) (i32.const '.ord($token).')) (call $debug (i32.const 12))      ;;';
+        // debug format
+        // 00 op i tape[i] 0
+        // 16 0000
+        // 32 tape[0..3]
+        // 48 tape[4..7]
+        yield '(i32.store (i32.const 12) (i32.const '.ord($token).'))            (call $debug (i32.const 12))';
+        yield '(i32.store (i32.const 12) (local.get 0))             (call $debug (i32.const 12))';
+        yield '(i32.store (i32.const 12) (i32.load (local.get 0)))  (call $debug (i32.const 12))';
+        yield '(i32.store (i32.const 12) (i32.const 0))             (call $debug (i32.const 12))';
+        for ($i = 0; $i < 4; $i++) {
+            yield '(i32.store (i32.const 12) (i32.const 0))             (call $debug (i32.const 12))';
+        }
+        for ($i = 0; $i < 8; $i++) {
+            yield '(i32.store (i32.const 12) (i32.load (i32.const '.(16+$i).'))) (call $debug (i32.const 12))';
+        }
 
         switch ($token) {
             case '>';
