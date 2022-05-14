@@ -81,7 +81,9 @@ const TEMPLATE = <<<'EOF'
     (export "memory" (memory 0))
     ;; debug format
     ;; 00 op i tape[i] 0 line col 00
-    ;; 32 tape[0..7]
+    ;; 32 tape[00..07]
+    ;; 64 tape[08..15]
+    ;; 96 tape[16..24]
     (func $debug (param $i i32) (param $op i32) (param $line i32) (param $col i32)
         (local $j i32)
         (i32.store (i32.const 12) (local.get $op))           (call $putchar_stderr (i32.const 12))
@@ -96,7 +98,7 @@ const TEMPLATE = <<<'EOF'
             (i32.store (i32.const 12) (i32.load (i32.add (local.get $j) (i32.const 16))))
             (call $putchar_stderr (i32.const 12))
             (local.set $j (i32.add (local.get $j) (i32.const 1)))
-            (br_if $dump_core (i32.lt_s (local.get $j) (i32.const 8)))
+            (br_if $dump_core (i32.lt_s (local.get $j) (i32.const 24)))
             ))
     (func $putchar_stderr (param $addr i32)
         (i32.store (i32.const 0) (local.get $addr))  ;; iov.iov_base
