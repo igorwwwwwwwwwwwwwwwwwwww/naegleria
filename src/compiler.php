@@ -34,8 +34,7 @@ function compile($tokens) {
                 yield '        (call $putchar (local.get 0))                                               ;; .';
                 break;
             case ',';
-                yield '        ;; ,';
-                // TBD
+                yield '        (call $getchar (local.get 0))                                               ;; ,';
                 break;
             case '[';
                 $loopId++;
@@ -60,6 +59,7 @@ function compile($tokens) {
 const TEMPLATE = <<<'EOF'
 (module
     (import "wasi_unstable" "fd_write" (func $fd_write (param i32 i32 i32 i32) (result i32)))
+    (import "wasi_unstable" "fd_read" (func $fd_read (param i32 i32 i32 i32) (result i32)))
     (import "wasi_unstable" "proc_exit" (func $proc_exit (param i32)))
     (memory 1)
     (export "memory" (memory 0))
@@ -85,6 +85,16 @@ const TEMPLATE = <<<'EOF'
             (i32.const 0) ;; *iovs
             (i32.const 1) ;; iovs_len
             (i32.const 8) ;; nwritten
+        )
+        drop)
+    (func $getchar (param i32)
+        (i32.store (i32.const 0) (local.get 0))  ;; iov.iov_base
+        (i32.store (i32.const 4) (i32.const 1))  ;; iov.iov_len
+        (call $fd_read
+            (i32.const 0) ;; 0 for stdin
+            (i32.const 0) ;; *iovs
+            (i32.const 1) ;; iovs_len
+            (i32.const 8) ;; nread
         )
         drop)
     (func $main (export "_start")

@@ -13,8 +13,8 @@ asm:
 
 .PHONY: wasm
 wasm:
-	bin/compile examples/hello\ copy.b > hello.wat && wat2wasm --debug-names hello.wat && wasmtime run -g hello.wasm
+	bin/compile examples/cat.b > hello.wat && wat2wasm --debug-names hello.wat && wasmtime run -g hello.wasm
 
 .PHONY: wasm-debug
 wasm-debug:
-	bin/compile examples/hello\ copy.b > hello.wat && wat2wasm --debug-names hello.wat && lldebug -- wasmtime run -g hello.wasm
+	bin/compile examples/cat.b > hello.wat && wat2wasm --debug-names hello.wat && lldebug -- wasmtime run -g hello.wasm
