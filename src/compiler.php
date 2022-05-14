@@ -27,14 +27,16 @@ function compile($tokens) {
     $loopId = 0;
     $loopStack = [];
     foreach ($tokens as $t) {
-        yield '        (call $debug (local.get $i) (i32.const '.ord($t['token']).') (i32.const '.$t['line'].') (i32.const '.$t['column'].'))';
+        if ($t['token'] !== '[') {
+            yield '        (call $debug (local.get $i) (i32.const '.ord($t['token']).') (i32.const '.$t['line'].') (i32.const '.$t['column'].'))';
+        }
 
         switch ($t['token']) {
             case '>';
-                yield '        (local.set $i (i32.add (local.get $i) (i32.const 1)))                         ;; >';
+                yield '        (local.set $i (i32.add (local.get $i) (i32.const 4)))                         ;; >';
                 break;
             case '<';
-                yield '        (local.set $i (i32.sub (local.get $i) (i32.const 1)))                         ;; <';
+                yield '        (local.set $i (i32.sub (local.get $i) (i32.const 4)))                         ;; <';
                 break;
             case '+';
                 yield '        (i32.store (local.get $i) (i32.add (i32.load (local.get $i)) (i32.const 1)))  ;; +';
@@ -51,18 +53,18 @@ function compile($tokens) {
             case '[';
                 $loopId++;
                 $loopStack[] = $loopId;
-                yield "        (block \$loope$loopId                                                              ;; [";
+                yield "        (block \$loope$loopId                                                                ;; [";
                 yield "          (loop \$loops$loopId";
-                yield '            (i32.eqz (i32.load (local.get $i)))';
-                yield "            (if (then br \$loope$loopId))";
+                yield '            (call $debug (local.get $i) (i32.const '.ord($t['token']).') (i32.const '.$t['line'].') (i32.const '.$t['column'].'))';
+                yield "            (br_if \$loope$loopId (i32.eqz (i32.load (local.get \$i))))";
                 break;
             case ']';
                 $endLoopId = array_pop($loopStack);
-                yield "            br \$loops$endLoopId                                                              ;; ]";
+                yield "            br \$loops$endLoopId                                                                ;; ]";
                 yield '        ))';
                 break;
             case '!';
-                yield '        (call $proc_exit (i32.const 2))                                             ;; !';
+                yield '        (call $proc_exit (i32.const 2))                                               ;; !';
                 break;
         }
     }
@@ -95,7 +97,7 @@ const TEMPLATE = <<<'EOF'
         (i32.store (i32.const 12) (i32.const 0))             (call $putchar_stderr (i32.const 12))
         (i32.store (i32.const 12) (i32.const 0))             (call $putchar_stderr (i32.const 12))
         (loop $dump_core
-            (i32.store (i32.const 12) (i32.load (i32.add (local.get $j) (i32.const 16))))
+            (i32.store (i32.const 12) (i32.load (i32.add (i32.mul (local.get $j) (i32.const 4)) (i32.const 16))))
             (call $putchar_stderr (i32.const 12))
             (local.set $j (i32.add (local.get $j) (i32.const 1)))
             (br_if $dump_core (i32.lt_s (local.get $j) (i32.const 24)))
