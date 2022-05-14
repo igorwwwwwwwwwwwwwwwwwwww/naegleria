@@ -4,18 +4,22 @@
 namespace igorw\naegleria;
 
 require __DIR__.'/../src/compiler.php';
+require __DIR__.'/../src/compiler/arm.php';
+require __DIR__.'/../src/compiler/intel.php';
+require __DIR__.'/../src/compiler/wasm.php';
 
-if ($argc <= 1) {
-    echo "Usage: compile filename.b\n";
+if ($argc <= 2) {
+    echo "Usage: compile (arm|intel|wasm) filename.b\n";
     exit(1);
 }
 
-$filename = $argv[1];
+$arch = $argv[1];
+$filename = $argv[2];
 $code = file_get_contents($filename);
 
 $tokens = tokenize($code);
 $asm = '';
-foreach (compile($tokens) as $instr) {
+foreach (compile($arch, $tokens) as $instr) {
     $asm .= $instr."\n";
 }
-echo template($asm);
+echo template($arch, $asm);
