@@ -15,21 +15,7 @@ function compile($tokens) {
     $loopId = 0;
     $loopStack = [];
     foreach ($tokens as $token) {
-        // debug format
-        // 00 op i tape[i] 0
-        // 16 0000
-        // 32 tape[0..3]
-        // 48 tape[4..7]
-        yield '(i32.store (i32.const 12) (i32.const '.ord($token).'))            (call $debug (i32.const 12))';
-        yield '(i32.store (i32.const 12) (local.get 0))             (call $debug (i32.const 12))';
-        yield '(i32.store (i32.const 12) (i32.load (local.get 0)))  (call $debug (i32.const 12))';
-        yield '(i32.store (i32.const 12) (i32.const 0))             (call $debug (i32.const 12))';
-        for ($i = 0; $i < 4; $i++) {
-            yield '(i32.store (i32.const 12) (i32.const 0))             (call $debug (i32.const 12))';
-        }
-        for ($i = 0; $i < 8; $i++) {
-            yield '(i32.store (i32.const 12) (i32.load (i32.const '.(16+$i).'))) (call $debug (i32.const 12))';
-        }
+        yield '        (call $debug (local.get 0) (i32.const '.ord($token).'))';
 
         switch ($token) {
             case '>';
@@ -75,13 +61,35 @@ const TEMPLATE = <<<'EOF'
     (import "wasi_unstable" "fd_write" (func $fd_write (param i32 i32 i32 i32) (result i32)))
     (import "wasi_unstable" "fd_read" (func $fd_read (param i32 i32 i32 i32) (result i32)))
     (import "wasi_unstable" "proc_exit" (func $proc_exit (param i32)))
-    (memory 1)
-    (export "memory" (memory 0))
     ;; memory layout
     ;; 00 iov.iov_base iov.iov_len
     ;; 08 nwritten token
     ;; 16 tape
-    (func $debug (param i32)
+    (memory 1)
+    (export "memory" (memory 0))
+    ;; debug format
+    ;; 00 op i tape[i] 0
+    ;; 16 0000
+    ;; 32 tape[0..3]
+    ;; 48 tape[4..7]
+    (func $debug (param i32 i32)
+        (i32.store (i32.const 12) (local.get 1))             (call $putchar_stderr (i32.const 12))
+        (i32.store (i32.const 12) (local.get 0))             (call $putchar_stderr (i32.const 12))
+        (i32.store (i32.const 12) (i32.load (local.get 0)))  (call $putchar_stderr (i32.const 12))
+        (i32.store (i32.const 12) (i32.const 0))             (call $putchar_stderr (i32.const 12))
+        (i32.store (i32.const 12) (i32.const 0))             (call $putchar_stderr (i32.const 12))
+        (i32.store (i32.const 12) (i32.const 0))             (call $putchar_stderr (i32.const 12))
+        (i32.store (i32.const 12) (i32.const 0))             (call $putchar_stderr (i32.const 12))
+        (i32.store (i32.const 12) (i32.const 0))             (call $putchar_stderr (i32.const 12))
+        (i32.store (i32.const 12) (i32.load (i32.const 16))) (call $putchar_stderr (i32.const 12))
+        (i32.store (i32.const 12) (i32.load (i32.const 17))) (call $putchar_stderr (i32.const 12))
+        (i32.store (i32.const 12) (i32.load (i32.const 18))) (call $putchar_stderr (i32.const 12))
+        (i32.store (i32.const 12) (i32.load (i32.const 19))) (call $putchar_stderr (i32.const 12))
+        (i32.store (i32.const 12) (i32.load (i32.const 20))) (call $putchar_stderr (i32.const 12))
+        (i32.store (i32.const 12) (i32.load (i32.const 21))) (call $putchar_stderr (i32.const 12))
+        (i32.store (i32.const 12) (i32.load (i32.const 22))) (call $putchar_stderr (i32.const 12))
+        (i32.store (i32.const 12) (i32.load (i32.const 23))) (call $putchar_stderr (i32.const 12)))
+    (func $putchar_stderr (param i32)
         (i32.store (i32.const 0) (local.get 0))  ;; iov.iov_base
         (i32.store (i32.const 4) (i32.const 1))  ;; iov.iov_len
         (call $fd_write
