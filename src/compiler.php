@@ -7,7 +7,7 @@ function tokenize($code) {
 
     $lines = explode("\n", $code);
     foreach ($lines as $i => $line) {
-        $chars = str_split($code);
+        $chars = str_split($line);
         foreach ($chars as $j => $char) {
             if (in_array($char, ['>', '<', '+', '-', '.', ',', '[', ']', '!'], true)) {
                 $tokens[] = [
@@ -27,33 +27,33 @@ function compile($tokens) {
     $loopId = 0;
     $loopStack = [];
     foreach ($tokens as $t) {
-        yield '        (call $debug (local.get 0) (i32.const '.ord($t['token']).') (i32.const '.$t['line'].') (i32.const '.$t['column'].'))';
+        yield '        (call $debug (local.get $i) (i32.const '.ord($t['token']).') (i32.const '.$t['line'].') (i32.const '.$t['column'].'))';
 
         switch ($t['token']) {
             case '>';
-                yield '        (local.set 0 (i32.add (local.get 0) (i32.const 1)))                         ;; >';
+                yield '        (local.set $i (i32.add (local.get $i) (i32.const 1)))                         ;; >';
                 break;
             case '<';
-                yield '        (local.set 0 (i32.sub (local.get 0) (i32.const 1)))                         ;; <';
+                yield '        (local.set $i (i32.sub (local.get $i) (i32.const 1)))                         ;; <';
                 break;
             case '+';
-                yield '        (i32.store (local.get 0) (i32.add (i32.load (local.get 0)) (i32.const 1)))  ;; +';
+                yield '        (i32.store (local.get $i) (i32.add (i32.load (local.get $i)) (i32.const 1)))  ;; +';
                 break;
             case '-';
-                yield '        (i32.store (local.get 0) (i32.sub (i32.load (local.get 0)) (i32.const 1)))  ;; -';
+                yield '        (i32.store (local.get $i) (i32.sub (i32.load (local.get $i)) (i32.const 1)))  ;; -';
                 break;
             case '.';
-                yield '        (call $putchar (local.get 0))                                               ;; .';
+                yield '        (call $putchar (local.get $i))                                                ;; .';
                 break;
             case ',';
-                yield '        (call $getchar (local.get 0))                                               ;; ,';
+                yield '        (call $getchar (local.get $i))                                                ;; ,';
                 break;
             case '[';
                 $loopId++;
                 $loopStack[] = $loopId;
                 yield "        (block \$loope$loopId                                                              ;; [";
                 yield "          (loop \$loops$loopId";
-                yield '            (i32.eqz (i32.load (local.get 0)))';
+                yield '            (i32.eqz (i32.load (local.get $i)))';
                 yield "            (if (then br \$loope$loopId))";
                 break;
             case ']';
@@ -80,30 +80,27 @@ const TEMPLATE = <<<'EOF'
     (memory 1)
     (export "memory" (memory 0))
     ;; debug format
-    ;; 00 op i tape[i] 0
-    ;; 16 0000
-    ;; 32 tape[0..3]
-    ;; 48 tape[4..7]
-    (func $debug (param i32 i32 i32 i32)
-        (i32.store (i32.const 12) (local.get 1))             (call $putchar_stderr (i32.const 12))
-        (i32.store (i32.const 12) (local.get 0))             (call $putchar_stderr (i32.const 12))
-        (i32.store (i32.const 12) (i32.load (local.get 0)))  (call $putchar_stderr (i32.const 12))
+    ;; 00 op i tape[i] 0 line col 00
+    ;; 32 tape[0..7]
+    (func $debug (param $i i32) (param $op i32) (param $line i32) (param $col i32)
+        (local $j i32)
+        (i32.store (i32.const 12) (local.get $op))           (call $putchar_stderr (i32.const 12))
+        (i32.store (i32.const 12) (local.get $i))            (call $putchar_stderr (i32.const 12))
+        (i32.store (i32.const 12) (i32.load (local.get $i))) (call $putchar_stderr (i32.const 12))
         (i32.store (i32.const 12) (i32.const 0))             (call $putchar_stderr (i32.const 12))
-        (i32.store (i32.const 12) (local.get 2))             (call $putchar_stderr (i32.const 12))
-        (i32.store (i32.const 12) (local.get 3))             (call $putchar_stderr (i32.const 12))
+        (i32.store (i32.const 12) (local.get $line))         (call $putchar_stderr (i32.const 12))
+        (i32.store (i32.const 12) (local.get $col))          (call $putchar_stderr (i32.const 12))
         (i32.store (i32.const 12) (i32.const 0))             (call $putchar_stderr (i32.const 12))
         (i32.store (i32.const 12) (i32.const 0))             (call $putchar_stderr (i32.const 12))
-        (i32.store (i32.const 12) (i32.load (i32.const 16))) (call $putchar_stderr (i32.const 12))
-        (i32.store (i32.const 12) (i32.load (i32.const 17))) (call $putchar_stderr (i32.const 12))
-        (i32.store (i32.const 12) (i32.load (i32.const 18))) (call $putchar_stderr (i32.const 12))
-        (i32.store (i32.const 12) (i32.load (i32.const 19))) (call $putchar_stderr (i32.const 12))
-        (i32.store (i32.const 12) (i32.load (i32.const 20))) (call $putchar_stderr (i32.const 12))
-        (i32.store (i32.const 12) (i32.load (i32.const 21))) (call $putchar_stderr (i32.const 12))
-        (i32.store (i32.const 12) (i32.load (i32.const 22))) (call $putchar_stderr (i32.const 12))
-        (i32.store (i32.const 12) (i32.load (i32.const 23))) (call $putchar_stderr (i32.const 12)))
-    (func $putchar_stderr (param i32)
-        (i32.store (i32.const 0) (local.get 0))  ;; iov.iov_base
-        (i32.store (i32.const 4) (i32.const 1))  ;; iov.iov_len
+        (loop $dump_core
+            (i32.store (i32.const 12) (i32.load (i32.add (local.get $j) (i32.const 16))))
+            (call $putchar_stderr (i32.const 12))
+            (local.set $j (i32.add (local.get $j) (i32.const 1)))
+            (br_if $dump_core (i32.lt_s (local.get $j) (i32.const 8)))
+            ))
+    (func $putchar_stderr (param $addr i32)
+        (i32.store (i32.const 0) (local.get $addr))  ;; iov.iov_base
+        (i32.store (i32.const 4) (i32.const 1))      ;; iov.iov_len
         (call $fd_write
             (i32.const 2) ;; file_descriptor - 2 for stderr
             (i32.const 0) ;; *iovs
@@ -111,9 +108,9 @@ const TEMPLATE = <<<'EOF'
             (i32.const 8) ;; nwritten
         )
         drop)
-    (func $putchar (param i32)
-        (i32.store (i32.const 0) (local.get 0))  ;; iov.iov_base
-        (i32.store (i32.const 4) (i32.const 1))  ;; iov.iov_len
+    (func $putchar (param $addr i32)
+        (i32.store (i32.const 0) (local.get $addr))  ;; iov.iov_base
+        (i32.store (i32.const 4) (i32.const 1))      ;; iov.iov_len
         (call $fd_write
             (i32.const 1) ;; file_descriptor - 1 for stdout
             (i32.const 0) ;; *iovs
@@ -121,9 +118,9 @@ const TEMPLATE = <<<'EOF'
             (i32.const 8) ;; nwritten
         )
         drop)
-    (func $getchar (param i32)
-        (i32.store (i32.const 0) (local.get 0))  ;; iov.iov_base
-        (i32.store (i32.const 4) (i32.const 1))  ;; iov.iov_len
+    (func $getchar (param $addr i32)
+        (i32.store (i32.const 0) (local.get $addr))  ;; iov.iov_base
+        (i32.store (i32.const 4) (i32.const 1))      ;; iov.iov_len
         (call $fd_read
             (i32.const 0) ;; 0 for stdin
             (i32.const 0) ;; *iovs
@@ -132,8 +129,8 @@ const TEMPLATE = <<<'EOF'
         )
         drop)
     (func $main (export "_start")
-        (local i32) ;; i
-        (local.set 0 (i32.const 16))
+        (local $i i32)
+        (local.set $i (i32.const 16))
 $asm
     )
 )
