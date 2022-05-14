@@ -15,17 +15,7 @@ function compile($tokens) {
     $loopId = 0;
     $loopStack = [];
     foreach ($tokens as $token) {
-        // yield '        ;; debug log';
-        // yield '        (i32.store (i32.const 12) (i32.const '.ord($token).'))';
-        // yield '        (i32.store (i32.const 0) (i32.const 12))  ;; iov.iov_base';
-        // yield '        (i32.store (i32.const 4) (i32.const 1))   ;; iov.iov_len';
-        // yield '        (call $fd_write';
-        // yield '            (i32.const 2) ;; file_descriptor - 2 for stderr';
-        // yield '            (i32.const 0) ;; *iovs';
-        // yield '            (i32.const 1) ;; iovs_len';
-        // yield '            (i32.const 8) ;; nwritten';
-        // yield '        )';
-        // yield '        drop';
+        yield '        (i32.store (i32.const 12) (i32.const '.ord($token).')) (call $debug (i32.const 12))      ;;';
 
         switch ($token) {
             case '>';
@@ -77,6 +67,16 @@ const TEMPLATE = <<<'EOF'
     ;; 00 iov.iov_base iov.iov_len
     ;; 08 nwritten token
     ;; 16 tape
+    (func $debug (param i32)
+        (i32.store (i32.const 0) (local.get 0))  ;; iov.iov_base
+        (i32.store (i32.const 4) (i32.const 1))  ;; iov.iov_len
+        (call $fd_write
+            (i32.const 2) ;; file_descriptor - 2 for stderr
+            (i32.const 0) ;; *iovs
+            (i32.const 1) ;; iovs_len
+            (i32.const 8) ;; nwritten
+        )
+        drop)
     (func $putchar (param i32)
         (i32.store (i32.const 0) (local.get 0))  ;; iov.iov_base
         (i32.store (i32.const 4) (i32.const 1))  ;; iov.iov_len
