@@ -1,7 +1,7 @@
 FROM php:7.4-cli
 COPY . /usr/src/myapp
 WORKDIR /usr/src/myapp
-RUN bin/compile examples/hello.b > main.s
+RUN bin/compile arm examples/hello.b > main.s
 
 FROM gcc:10
 COPY . /usr/src/myapp

@@ -13,4 +13,4 @@ asm:
 
 .PHONY: wasm
 wasm:
-	bin/compile examples/hello.b > hello.wat && wat2wasm --debug-names hello.wat && wasmtime run -g hello.wasm
+	bin/compile wasm examples/hello.b > hello.wat && wat2wasm --debug-names hello.wat && wasmtime run -g hello.wasm
