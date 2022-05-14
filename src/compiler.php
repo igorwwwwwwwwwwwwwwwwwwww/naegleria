@@ -3,10 +3,22 @@
 namespace igorw\naegleria;
 
 function tokenize($code) {
-    $tokens = str_split($code);
-    $tokens = array_values(array_filter($tokens, function ($token) {
-        return in_array($token, ['>', '<', '+', '-', '.', ',', '[', ']', '!'], true);
-    }));
+    $tokens = [];
+
+    $lines = explode("\n", $code);
+    foreach ($lines as $i => $line) {
+        $chars = str_split($code);
+        foreach ($chars as $j => $char) {
+            if (in_array($char, ['>', '<', '+', '-', '.', ',', '[', ']', '!'], true)) {
+                $tokens[] = [
+                    'token'     => $char,
+                    'line'      => $i+1,
+                    'column'    => $j+1,
+                ];
+            }
+        }
+    }
+
     return $tokens;
 }
 
@@ -14,10 +26,10 @@ function compile($tokens) {
     $condId = 0;
     $loopId = 0;
     $loopStack = [];
-    foreach ($tokens as $token) {
-        yield '        (call $debug (local.get 0) (i32.const '.ord($token).'))';
+    foreach ($tokens as $t) {
+        yield '        (call $debug (local.get 0) (i32.const '.ord($t['token']).') (i32.const '.$t['line'].') (i32.const '.$t['column'].'))';
 
-        switch ($token) {
+        switch ($t['token']) {
             case '>';
                 yield '        (local.set 0 (i32.add (local.get 0) (i32.const 1)))                         ;; >';
                 break;
@@ -72,13 +84,13 @@ const TEMPLATE = <<<'EOF'
     ;; 16 0000
     ;; 32 tape[0..3]
     ;; 48 tape[4..7]
-    (func $debug (param i32 i32)
+    (func $debug (param i32 i32 i32 i32)
         (i32.store (i32.const 12) (local.get 1))             (call $putchar_stderr (i32.const 12))
         (i32.store (i32.const 12) (local.get 0))             (call $putchar_stderr (i32.const 12))
         (i32.store (i32.const 12) (i32.load (local.get 0)))  (call $putchar_stderr (i32.const 12))
         (i32.store (i32.const 12) (i32.const 0))             (call $putchar_stderr (i32.const 12))
-        (i32.store (i32.const 12) (i32.const 0))             (call $putchar_stderr (i32.const 12))
-        (i32.store (i32.const 12) (i32.const 0))             (call $putchar_stderr (i32.const 12))
+        (i32.store (i32.const 12) (local.get 2))             (call $putchar_stderr (i32.const 12))
+        (i32.store (i32.const 12) (local.get 3))             (call $putchar_stderr (i32.const 12))
         (i32.store (i32.const 12) (i32.const 0))             (call $putchar_stderr (i32.const 12))
         (i32.store (i32.const 12) (i32.const 0))             (call $putchar_stderr (i32.const 12))
         (i32.store (i32.const 12) (i32.load (i32.const 16))) (call $putchar_stderr (i32.const 12))
