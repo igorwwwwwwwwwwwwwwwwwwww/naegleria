@@ -24,10 +24,10 @@ function tokenize($code) {
 
 function compile($arch, $tokens) {
     switch ($arch) {
-        case 'arm':
-            return arm\compile($tokens);
-        case 'intel':
-            return intel\compile($tokens);
+        case 'aarch64':
+            return aarch64\compile($tokens);
+        case 'amd64':
+            return amd64\compile($tokens);
         case 'wasm':
             return wasm\compile($tokens);
         default:
@@ -37,10 +37,10 @@ function compile($arch, $tokens) {
 
 function template($arch, $asm) {
     switch ($arch) {
-        case 'arm':
-            return arm\template($asm);
-        case 'intel':
-            return intel\template($asm);
+        case 'aarch64':
+            return aarch64\template($asm);
+        case 'amd64':
+            return amd64\template($asm);
         case 'wasm':
             return wasm\template($asm);
         default:

@@ -1,6 +1,6 @@
 <?php
 
-namespace igorw\naegleria\arm;
+namespace igorw\naegleria\aarch64;
 
 function compile($tokens) {
     $condId = 0;

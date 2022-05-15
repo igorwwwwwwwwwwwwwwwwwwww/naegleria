@@ -1,6 +1,6 @@
 <?php
 
-namespace igorw\naegleria\intel;
+namespace igorw\naegleria\amd64;
 
 function compile($tokens) {
     $condId = 0;

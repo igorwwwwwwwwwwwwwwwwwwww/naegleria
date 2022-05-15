@@ -4,12 +4,12 @@
 namespace igorw\naegleria;
 
 require __DIR__.'/../src/compiler.php';
-require __DIR__.'/../src/compiler/arm.php';
-require __DIR__.'/../src/compiler/intel.php';
+require __DIR__.'/../src/compiler/aarch64.php';
+require __DIR__.'/../src/compiler/amd64.php';
 require __DIR__.'/../src/compiler/wasm.php';
 
 if ($argc <= 2) {
-    echo "Usage: compile (arm|intel|wasm) filename.b\n";
+    echo "Usage: compile (aarch64|amd64|wasm) filename.b\n";
     exit(1);
 }
 
