@@ -11,7 +11,10 @@ int main() {
   //i--;
   (*i)++;
   //(*i)--;
-  putchar(*i);
-  *i = getchar();
+  //putchar(*i);
+  //*i = getchar();
+  while (*i) {
+    //i++;
+  }
   return 0;
 }
