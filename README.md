@@ -27,6 +27,7 @@ For more cross-platform support, you can use the LLVM backend:
 - linux amd64
 - linux aarch64
 - llvm
+- php (source)
 - wasm (with WASI)
 
 ## Limitations

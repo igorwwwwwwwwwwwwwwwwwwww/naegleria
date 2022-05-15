@@ -61,7 +61,7 @@ function compile($tokens) {
                 yield sprintf('  %%%d = load i32*, i32** @i, align 8', $varId);
                 yield sprintf('  store i32 %%%d, i32* %%%d, align 4', $varId-1, $varId);
                 break;
-                case '[';
+            case '[';
                 $loopId++;
                 $loopStack[] = $loopId;
                 yield '  ; [';
@@ -78,7 +78,7 @@ function compile($tokens) {
 
                 yield sprintf('loopb%d:', $loopId);
                 break;
-                case ']';
+            case ']';
                 $endLoopId = array_pop($loopStack);
                 yield '  ; ]';
                 yield sprintf('  br label %%loops%d, !llvm.loop !{!"llvm.loop.mustprogress"}', $endLoopId);

@@ -7,10 +7,11 @@ require __DIR__.'/../src/compiler.php';
 require __DIR__.'/../src/compiler/aarch64.php';
 require __DIR__.'/../src/compiler/amd64.php';
 require __DIR__.'/../src/compiler/llvm.php';
+require __DIR__.'/../src/compiler/php.php';
 require __DIR__.'/../src/compiler/wasm.php';
 
 if ($argc <= 2) {
-    echo "Usage: compile (aarch64|amd64|llvm|wasm) filename.b\n";
+    echo "Usage: compile (aarch64|amd64|llvm|php|wasm) filename.b\n";
     exit(1);
 }
 
