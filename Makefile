@@ -13,9 +13,8 @@ asm:
 
 .PHONY: llvm
 llvm:
-	bin/compile llvm examples/hello.b > hello.ll
-	clang -o hello hello.ll
-	./hello
+	nerdctl build -t naegleria-llvm -f Dockerfile.llvm .
+	nerdctl run -it naegleria-llvm
 
 .PHONY: wasm
 wasm:
