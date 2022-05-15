@@ -11,6 +11,6 @@ int main() {
   //i--;
   (*i)++;
   //(*i)--;
-  //putchar(*i);
+  putchar(*i);
   return 0;
 }
