@@ -16,6 +16,10 @@ define i32 @main() #0 {
   %3 = load i32*, i32** @i, align 8
   %4 = getelementptr inbounds i32, i32* %3, i32 1
   store i32* %4, i32** @i, align 8
+  %5 = load i32*, i32** @i, align 8
+  %6 = load i32, i32* %5, align 4
+  %7 = add nsw i32 %6, 1
+  store i32 %7, i32* %5, align 4
   ret i32 0
 }
 
