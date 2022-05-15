@@ -12,5 +12,6 @@ int main() {
   (*i)++;
   //(*i)--;
   putchar(*i);
+  *i = getchar();
   return 0;
 }

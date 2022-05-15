@@ -55,6 +55,11 @@ function compile($tokens) {
                 break;
             case ',';
                 yield '  ; ,';
+                $varId++;
+                yield sprintf('  %%%d = call i32 @getchar()', $varId);
+                $varId++;
+                yield sprintf('  %%%d = load i32*, i32** @i, align 8', $varId, $varId-1);
+                yield sprintf('  store i32 %%%d, i32* %%%d, align 4', $varId-2, $varId-1);
                 break;
             case '[';
                 $loopId++;
@@ -85,6 +90,8 @@ $asm
 
 declare i32 @"\01_system"(i8*) #1
 declare i32 @putchar(i32) #1
+declare i32 @getchar() #1
+
 EOF;
 
 function template($asm) {
