@@ -1,0 +1,22 @@
+FROM php:8.1-cli
+COPY . /usr/src/myapp
+WORKDIR /usr/src/myapp
+RUN bin/compile wasm examples/hello.b > main.wat
+
+FROM alpine:edge
+RUN echo 'https://dl-cdn.alpinelinux.org/alpine/edge/testing' >> /etc/apk/repositories
+RUN apk update
+RUN apk add wabt
+WORKDIR /usr/src/myapp
+COPY --from=0 /usr/src/myapp/main.wat .
+RUN wat2wasm --debug-names main.wat
+
+FROM ubuntu:22.04
+RUN apt-get update -y
+RUN apt-get install -y wget xz-utils
+WORKDIR /opt/wasmtime
+RUN wget -q "https://github.com/bytecodealliance/wasmtime/releases/download/v0.36.0/wasmtime-v0.36.0-$(uname -m)-linux.tar.xz"
+RUN tar xf wasmtime-v0.36.0-aarch64-linux.tar.xz
+RUN mv wasmtime-v0.36.0-aarch64-linux/wasmtime /usr/local/bin
+COPY --from=1 /usr/src/myapp/main.wasm .
+CMD ["wasmtime", "run", "-g", "main.wasm"]

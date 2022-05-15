@@ -13,4 +13,5 @@ asm:
 
 .PHONY: wasm
 wasm:
-	bin/compile wasm examples/hello.b > hello.wat && wat2wasm --debug-names hello.wat && wasmtime run -g hello.wasm
+	nerdctl build -t naegleria-wasm -f Dockerfile.wasm .
+	nerdctl run -it naegleria-wasm

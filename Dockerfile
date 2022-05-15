@@ -1,4 +1,4 @@
-FROM php:7.4-cli
+FROM php:8.1-cli
 COPY . /usr/src/myapp
 WORKDIR /usr/src/myapp
 RUN bin/compile arm examples/hello.b > main.s
