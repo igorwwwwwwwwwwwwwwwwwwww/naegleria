@@ -18,6 +18,11 @@ function compile($tokens) {
                 break;
             case '<';
                 yield ' ; <';
+                $varId++;
+                yield " %$varId = load i32*, i32** @i, align 8";
+                $varId++;
+                yield " %$varId = getelementptr inbounds i32, i32* %3, i32 -1";
+                yield ' store i32* %4, i32** @i, align 8';
                 break;
             case '+';
                 yield ' ; +';
