@@ -15,6 +15,13 @@ You can use Naegleria to compile a brainfuck file into AT&T assembly. This can t
     $ ./hello
     Hello World!
 
+For more cross-platform support, you can use the LLVM backend:
+
+    $ bin/compile llvm examples/hello.b > hello.ll
+    $ clang -o hello hello.ll
+    $ ./hello
+    Hello World!
+
 ## Platforms
 
 - linux amd64
