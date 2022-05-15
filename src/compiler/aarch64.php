@@ -3,6 +3,7 @@
 namespace igorw\naegleria\aarch64;
 
 function compile($tokens) {
+    $condId = 0;
     $loopId = 0;
     $loopStack = [];
     foreach ($tokens as $t) {
@@ -22,7 +23,7 @@ function compile($tokens) {
                 yield ' adrp	x0, i';
                 yield ' add	x0, x0, :lo12:i';
                 yield ' ldr	w0, [x0]';
-                yield ' sub	w1, w0, #1'; // this line changed
+                yield ' sub	w1, w0, #1';
                 yield ' adrp	x0, i';
                 yield ' add	x0, x0, :lo12:i';
                 yield ' str	w1, [x0]';
@@ -51,7 +52,7 @@ function compile($tokens) {
                 yield ' add     x0, x0, :lo12:tape';
                 yield ' sxtw    x1, w3';
                 yield ' ldr     w0, [x0, x1, lsl 2]';
-                yield ' sub     w2, w0, #1'; // this line changed
+                yield ' sub     w2, w0, #1';
                 yield ' adrp    x0, tape';
                 yield ' add     x0, x0, :lo12:tape';
                 yield ' sxtw    x1, w3';
@@ -69,6 +70,7 @@ function compile($tokens) {
                 yield ' bl	putchar';
                 break;
             case ',';
+                $condId++;
                 yield ' # ,';
                 yield ' adrp	x0, i';
                 yield ' add	x0, x0, :lo12:i';
@@ -80,6 +82,31 @@ function compile($tokens) {
                 yield ' sxtw	x1, w19';
                 yield ' str	w2, [x0, x1, lsl 2]';
                 yield ' mov	w0, 0';
+
+                yield ' adrp	x0, i';
+                yield ' add	x0, x0, :lo12:i';
+                yield ' ldr	w1, [x0]';
+                yield ' adrp	x0, tape';
+                yield ' add	x0, x0, :lo12:tape';
+                yield ' sxtw	x1, w1';
+                yield ' ldr	w0, [x0, x1, lsl 2]';
+                yield ' cmp	w0, 4';
+                yield " bne .cond$condId";
+
+                yield ' adrp    x0, i';
+                yield ' add     x0, x0, :lo12:i';
+                yield ' ldr     w3, [x0]';
+                yield ' adrp    x0, tape';
+                yield ' add     x0, x0, :lo12:tape';
+                yield ' sxtw    x1, w3';
+                yield ' ldr     w0, [x0, x1, lsl 2]';
+                yield ' add     w2, w0, 1';
+                yield ' adrp    x0, tape';
+                yield ' add     x0, x0, :lo12:tape';
+                yield ' sxtw    x1, w3';
+                yield ' str     wzr, [x0]';
+
+                yield ".cond$condId:";
                 break;
             case '[';
                 $loopId++;
