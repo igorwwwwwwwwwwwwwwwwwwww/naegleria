@@ -5,7 +5,6 @@ namespace igorw\naegleria\wasm;
 const DEBUG = false;
 
 function compile($tokens) {
-    $condId = 0;
     $loopId = 0;
     $loopStack = [];
     foreach ($tokens as $t) {

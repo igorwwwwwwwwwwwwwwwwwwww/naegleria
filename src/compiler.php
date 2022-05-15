@@ -28,6 +28,8 @@ function compile($arch, $tokens) {
             return aarch64\compile($tokens);
         case 'amd64':
             return amd64\compile($tokens);
+        case 'llvm':
+            return llvm\compile($tokens);
         case 'wasm':
             return wasm\compile($tokens);
         default:
@@ -41,6 +43,8 @@ function template($arch, $asm) {
             return aarch64\template($asm);
         case 'amd64':
             return amd64\template($asm);
+        case 'llvm':
+            return llvm\template($asm);
         case 'wasm':
             return wasm\template($asm);
         default:
