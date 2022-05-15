@@ -6,14 +6,7 @@ RUN bin/compile llvm examples/hello.b > main.ll
 FROM ubuntu:22.04
 RUN apt-get update -y
 RUN apt-get install -y clang
-
-COPY . /usr/src/myapp
 WORKDIR /usr/src/myapp
-RUN clang -S -emit-llvm main.c
-CMD cat main.ll
-# ^ todo delete this line
-
-#WORKDIR /usr/src/myapp
-#COPY --from=0 /usr/src/myapp/main.ll .
-#RUN clang -o myapp main.ll
-#CMD ["./myapp"]
+COPY --from=0 /usr/src/myapp/main.ll .
+RUN clang -o myapp main.ll
+CMD ["./myapp"]
