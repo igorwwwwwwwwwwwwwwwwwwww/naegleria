@@ -14,7 +14,7 @@ int main() {
   //putchar(*i);
   //*i = getchar();
   while (*i) {
-    //i++;
+    i++;
   }
   return 0;
 }

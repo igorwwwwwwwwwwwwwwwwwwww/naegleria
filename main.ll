@@ -26,12 +26,15 @@ define i32 @main() #0 {
   %9 = load i32*, i32** @i, align 8
   %10 = load i32, i32* %9, align 4
   %11 = icmp ne i32 %10, 0
-  br i1 %11, label %12, label %13
+  br i1 %11, label %12, label %15
 
 12:                                               ; preds = %8
+  %13 = load i32*, i32** @i, align 8
+  %14 = getelementptr inbounds i32, i32* %13, i32 1
+  store i32* %14, i32** @i, align 8
   br label %8, !llvm.loop !10
 
-13:                                               ; preds = %8
+15:                                               ; preds = %8
   ret i32 0
 }
 
