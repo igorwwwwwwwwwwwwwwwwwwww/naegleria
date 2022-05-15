@@ -35,7 +35,7 @@ function compile($tokens) {
                 yield sprintf('  store i32 %%%d, i32* %%%d, align 4', $varId, $varId-2);
                 break;
             case '-';
-                yield ' ; -';
+                yield '  ; -';
                 $varId++;
                 yield sprintf('  %%%d = load i32*, i32** @i, align 8', $varId);
                 $varId++;
