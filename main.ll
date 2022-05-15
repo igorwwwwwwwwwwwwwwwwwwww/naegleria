@@ -16,15 +16,10 @@ define i32 @main() #0 {
   %3 = load i32*, i32** @i, align 8
   %4 = getelementptr inbounds i32, i32* %3, i32 1
   store i32* %4, i32** @i, align 8
-  %5 = load i32*, i32** @i, align 8
-  %6 = load i32, i32* %5, align 4
-  %7 = call i32 @putchar(i32 %6)
   ret i32 0
 }
 
 declare i32 @"\01_system"(i8*) #1
-
-declare i32 @putchar(i32) #1
 
 attributes #0 = { noinline nounwind optnone ssp uwtable "frame-pointer"="non-leaf" "min-legal-vector-width"="0" "no-trapping-math"="true" "probe-stack"="__chkstk_darwin" "stack-protector-buffer-size"="8" "target-cpu"="apple-m1" "target-features"="+aes,+crc,+crypto,+dotprod,+fp-armv8,+fp16fml,+fullfp16,+lse,+neon,+ras,+rcpc,+rdm,+sha2,+sha3,+sm4,+v8.5a,+zcm,+zcz" }
 attributes #1 = { "frame-pointer"="non-leaf" "no-trapping-math"="true" "probe-stack"="__chkstk_darwin" "stack-protector-buffer-size"="8" "target-cpu"="apple-m1" "target-features"="+aes,+crc,+crypto,+dotprod,+fp-armv8,+fp16fml,+fullfp16,+lse,+neon,+ras,+rcpc,+rdm,+sha2,+sha3,+sm4,+v8.5a,+zcm,+zcz" }
