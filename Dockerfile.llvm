@@ -1,0 +1,12 @@
+FROM php:8.1-cli
+COPY . /usr/src/myapp
+WORKDIR /usr/src/myapp
+RUN bin/compile llvm examples/hello.b > main.ll
+
+FROM ubuntu:22.04
+RUN apt-get update -y
+RUN apt-get install -y clang
+WORKDIR /usr/src/myapp
+COPY --from=0 /usr/src/myapp/main.ll .
+RUN clang -o myapp main.ll
+CMD ["./myapp"]

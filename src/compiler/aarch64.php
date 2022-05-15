@@ -3,7 +3,6 @@
 namespace igorw\naegleria\aarch64;
 
 function compile($tokens) {
-    $condId = 0;
     $loopId = 0;
     $loopStack = [];
     foreach ($tokens as $t) {
@@ -70,6 +69,7 @@ function compile($tokens) {
                 yield ' bl	putchar';
                 break;
             case ',';
+                yield ' # ,';
                 yield ' adrp	x0, i';
                 yield ' add	x0, x0, :lo12:i';
                 yield ' ldr	w19, [x0]';

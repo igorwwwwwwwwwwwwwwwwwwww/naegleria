@@ -11,6 +11,11 @@ asm:
 	nerdctl build -t naegleria-asm -f Dockerfile.asm .
 	nerdctl run naegleria-asm > main.s
 
+.PHONY: llvm
+llvm:
+	nerdctl build -t naegleria-llvm -f Dockerfile.llvm .
+	nerdctl run -it naegleria-llvm
+
 .PHONY: wasm
 wasm:
 	nerdctl build -t naegleria-wasm -f Dockerfile.wasm .
