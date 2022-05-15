@@ -3,8 +3,8 @@
 namespace igorw\naegleria\llvm;
 
 function compile($tokens) {
-    $loopId = 0;
     $varId = 2;
+    $loopId = 0;
     $loopStack = [];
     foreach ($tokens as $t) {
         switch ($t['token']) {
@@ -61,14 +61,28 @@ function compile($tokens) {
                 yield sprintf('  %%%d = load i32*, i32** @i, align 8', $varId, $varId-1);
                 yield sprintf('  store i32 %%%d, i32* %%%d, align 4', $varId-2, $varId-1);
                 break;
-            case '[';
+                case '[';
                 $loopId++;
                 $loopStack[] = $loopId;
                 yield '  ; [';
+                yield sprintf('  br label %%loops%d', $loopId);
+
+                yield sprintf('loops%d:', $loopId);
+                $varId++;
+                yield sprintf('  %%%d = load i32*, i32** @i, align 8', $varId);
+                $varId++;
+                yield sprintf('  %%%d = load i32, i32* %%%d, align 4', $varId, $varId-1);
+                $varId++;
+                yield sprintf('  %%%d = icmp ne i32 %%%d, 0', $varId, $varId-1);
+                yield sprintf('  br i1 %%%d, label %%loopb%d, label %%loope%d', $varId, $loopId, $loopId);
+
+                yield sprintf('loopb%d:', $loopId);
                 break;
-            case ']';
+                case ']';
                 $endLoopId = array_pop($loopStack);
                 yield '  ; ]';
+                yield sprintf('  br label %%loops%d, !llvm.loop !{!"llvm.loop.mustprogress"}', $endLoopId);
+                yield sprintf('loope%d:', $endLoopId);
                 break;
         }
     }
