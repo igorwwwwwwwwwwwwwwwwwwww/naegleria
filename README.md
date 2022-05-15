@@ -17,7 +17,7 @@ You can use Naegleria to compile a brainfuck file into AT&T assembly. This can t
 
 ## Platforms
 
-- linux 64-bit x86
+- linux arm64
 - linux aarch64
 - wasm (with WASI)
 
