@@ -140,6 +140,7 @@ i:
     .size	tape, 20000
 tape:
     .zero	20000
+
 EOF;
 
 function template($asm) {
