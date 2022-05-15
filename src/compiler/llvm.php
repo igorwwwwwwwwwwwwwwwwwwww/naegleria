@@ -4,6 +4,7 @@ namespace igorw\naegleria\llvm;
 
 function compile($tokens) {
     $varId = 2;
+    $condId = 0;
     $loopId = 0;
     $loopStack = [];
     foreach ($tokens as $t) {
@@ -60,6 +61,23 @@ function compile($tokens) {
                 $varId++;
                 yield sprintf('  %%%d = load i32*, i32** @i, align 8', $varId);
                 yield sprintf('  store i32 %%%d, i32* %%%d, align 4', $varId-1, $varId);
+
+                $condId++;
+                $varId++;
+                yield sprintf('  %%%d = load i32*, i32** @i, align 8', $varId);
+                $varId++;
+                yield sprintf('  %%%d = load i32, i32* %%%d, align 4', $varId, $varId-1);
+                $varId++;
+                yield sprintf('  %%%d = icmp eq i32 %%%d, 4', $varId, $varId-1);
+                yield sprintf('  br i1 %%%d, label %%condb%d, label %%conde%d', $varId, $condId, $condId);
+
+                yield sprintf('condb%d:', $condId);
+                $varId++;
+                yield sprintf('  %%%d = load i32*, i32** @i, align 8', $varId);
+                yield sprintf('  store i32 0, i32* %14, align 4', $varId);
+                yield sprintf('  br label %%conde%d', $condId);
+
+                yield sprintf('conde%d:', $condId);
                 break;
             case '[';
                 $loopId++;
