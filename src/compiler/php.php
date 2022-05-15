@@ -6,26 +6,26 @@ function compile($tokens) {
     foreach ($tokens as $t) {
         switch ($t['token']) {
             case '>';
-                yield '$i++; // >';
+                yield '$i++;                     // >';
                 break;
             case '<';
-                yield '$i--; // >';
+                yield '$i--;                     // >';
                 break;
             case '+';
-                yield '$tape[$i] += 1; // +';
+                yield '$tape[$i] += 1;           // +';
                 break;
             case '-';
-                yield '$tape[$i] -= 1; // -';
+                yield '$tape[$i] -= 1;           // -';
                 break;
             case '.';
-                yield 'echo chr($tape[$i]); // .';
+                yield 'echo chr($tape[$i]);      // .';
                 break;
             case ',';
-                yield '$char = fread(STDIN, 1); // ,';
+                yield '$char = fread(STDIN, 1);  // ,';
                 yield '$tape[$i] = ($char === "\x04") ? 0 : ord($char);';
                 break;
             case '[';
-                yield 'while ($tape[$i]) { // [';
+                yield 'while ($tape[$i]) {       // [';
                 break;
             case ']';
                 yield '} // ]';
