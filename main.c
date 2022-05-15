@@ -7,7 +7,7 @@ int *i;
 int main() {
   system("stty -icanon");
   i = &tape;
-  //i++;
+  i++;
   //i--;
   (*i)++;
   //(*i)--;
