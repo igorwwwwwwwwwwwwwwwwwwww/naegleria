@@ -74,7 +74,7 @@ function compile($tokens) {
                 yield sprintf('condb%d:', $condId);
                 $varId++;
                 yield sprintf('  %%%d = load i32*, i32** @i, align 8', $varId);
-                yield sprintf('  store i32 0, i32* %14, align 4', $varId);
+                yield sprintf('  store i32 0, i32* %%%d, align 4', $varId);
                 yield sprintf('  br label %%conde%d', $condId);
 
                 yield sprintf('conde%d:', $condId);
