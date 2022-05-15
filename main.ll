@@ -14,8 +14,9 @@ define i32 @main() #0 {
   %2 = call i32 @"\01_system"(i8* getelementptr inbounds ([13 x i8], [13 x i8]* @.str, i64 0, i64 0))
   store i32* getelementptr inbounds ([5000 x i32], [5000 x i32]* @tape, i32 0, i32 0), i32** @i, align 8
   %3 = load i32*, i32** @i, align 8
-  %4 = getelementptr inbounds i32, i32* %3, i32 -1
-  store i32* %4, i32** @i, align 8
+  %4 = load i32, i32* %3, align 4
+  %5 = add nsw i32 %4, 1
+  store i32 %5, i32* %3, align 4
   ret i32 0
 }
 

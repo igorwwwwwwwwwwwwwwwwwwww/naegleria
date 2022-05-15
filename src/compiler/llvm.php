@@ -9,23 +9,28 @@ function compile($tokens) {
     foreach ($tokens as $t) {
         switch ($t['token']) {
             case '>';
-                yield ' ; >';
+                yield '  ; >';
                 $varId++;
-                yield " %$varId = load i32*, i32** @i, align 8";
+                yield "  %$varId = load i32*, i32** @i, align 8";
                 $varId++;
-                yield " %$varId = getelementptr inbounds i32, i32* %3, i32 1";
-                yield ' store i32* %4, i32** @i, align 8';
+                yield "  %$varId = getelementptr inbounds i32, i32* %3, i32 1";
+                yield '  store i32* %4, i32** @i, align 8';
                 break;
             case '<';
-                yield ' ; <';
+                yield '  ; <';
                 $varId++;
-                yield " %$varId = load i32*, i32** @i, align 8";
+                yield "  %$varId = load i32*, i32** @i, align 8";
                 $varId++;
-                yield " %$varId = getelementptr inbounds i32, i32* %3, i32 -1";
-                yield ' store i32* %4, i32** @i, align 8';
+                yield "  %$varId = getelementptr inbounds i32, i32* %3, i32 -1";
+                yield '  store i32* %4, i32** @i, align 8';
                 break;
             case '+';
-                yield ' ; +';
+                yield '  ; +';
+                $varId++;
+                yield "  %$varId = load i32, i32* %3, align 4";
+                $varId++;
+                yield "  %$varId = add nsw i32 %4, 1";
+                yield '  store i32 %5, i32* %3, align 4';
                 break;
             case '-';
                 yield ' ; -';
