@@ -58,8 +58,8 @@ function compile($tokens) {
                 $varId++;
                 yield sprintf('  %%%d = call i32 @getchar()', $varId);
                 $varId++;
-                yield sprintf('  %%%d = load i32*, i32** @i, align 8', $varId, $varId-1);
-                yield sprintf('  store i32 %%%d, i32* %%%d, align 4', $varId-2, $varId-1);
+                yield sprintf('  %%%d = load i32*, i32** @i, align 8', $varId);
+                yield sprintf('  store i32 %%%d, i32* %%%d, align 4', $varId-1, $varId);
                 break;
                 case '[';
                 $loopId++;
