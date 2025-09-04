@@ -32,6 +32,8 @@ function compile($arch, $tokens) {
             return llvm\compile($tokens);
         case 'php':
             return php\compile($tokens);
+        case 'ruby':
+            return ruby\compile($tokens);
         case 'wasm':
             return wasm\compile($tokens);
         default:
@@ -49,6 +51,8 @@ function template($arch, $asm) {
             return llvm\template($asm);
         case 'php':
             return php\template($asm);
+        case 'ruby':
+            return ruby\template($asm);
         case 'wasm':
             return wasm\template($asm);
         default:
