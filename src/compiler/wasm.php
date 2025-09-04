@@ -52,8 +52,8 @@ function compile($tokens) {
 
 const TEMPLATE = <<<'EOF'
 (module
-    (import "wasi_unstable" "fd_write" (func $fd_write (param i32 i32 i32 i32) (result i32)))
-    (import "wasi_unstable" "fd_read" (func $fd_read (param i32 i32 i32 i32) (result i32)))
+    (import "wasi_snapshot_preview1" "fd_write" (func $fd_write (param i32 i32 i32 i32) (result i32)))
+    (import "wasi_snapshot_preview1" "fd_read" (func $fd_read (param i32 i32 i32 i32) (result i32)))
     ;; memory layout
     ;; 00 iov.iov_base iov.iov_len
     ;; 08 nwritten token
