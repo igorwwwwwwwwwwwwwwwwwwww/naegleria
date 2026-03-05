@@ -44,7 +44,6 @@ find_program(PICOTOOL picotool)
 if (PICOTOOL)
     add_custom_target(flash
         COMMAND ${PICOTOOL} load -f $<TARGET_FILE:naegleria_rp2350>
-        COMMAND ${PICOTOOL} reboot
         DEPENDS naegleria_rp2350
         USES_TERMINAL
         COMMENT "Flashing naegleria_rp2350 via picotool"
