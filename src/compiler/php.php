@@ -5,29 +5,29 @@ namespace igorw\naegleria\php;
 function compile($tokens) {
     foreach ($tokens as $t) {
         switch ($t['token']) {
-            case '>';
+            case '>':
                 yield '$i++;                     // >';
                 break;
-            case '<';
+            case '<':
                 yield '$i--;                     // >';
                 break;
-            case '+';
+            case '+':
                 yield '$tape[$i] += 1;           // +';
                 break;
-            case '-';
+            case '-':
                 yield '$tape[$i] -= 1;           // -';
                 break;
-            case '.';
+            case '.':
                 yield 'echo chr($tape[$i]);      // .';
                 break;
-            case ',';
+            case ',':
                 yield '$char = fread(STDIN, 1);  // ,';
                 yield '$tape[$i] = ($char === "\x04") ? 0 : ord($char);';
                 break;
-            case '[';
+            case '[':
                 yield 'while ($tape[$i]) {       // [';
                 break;
-            case ']';
+            case ']':
                 yield '} // ]';
                 break;
         }

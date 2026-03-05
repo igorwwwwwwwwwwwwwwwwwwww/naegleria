@@ -5,29 +5,29 @@ namespace igorw\naegleria\ruby;
 function compile($tokens) {
     foreach ($tokens as $t) {
         switch ($t['token']) {
-            case '>';
+            case '>':
                 yield 'i += 1                    # >';
                 break;
-            case '<';
+            case '<':
                 yield 'i -= 1                    # >';
                 break;
-            case '+';
+            case '+':
                 yield 'tape[i] += 1              # +';
                 break;
-            case '-';
+            case '-':
                 yield 'tape[i] -= 1              # -';
                 break;
-            case '.';
+            case '.':
                 yield 'print tape[i].chr         # .';
                 break;
-            case ',';
+            case ',':
                 yield 'char = IO.getch           # ,';
                 yield 'tape[i] = (char == "\x04") ? 0 : char.ord;';
                 break;
-            case '[';
+            case '[':
                 yield 'while tape[i] != 0        # [';
                 break;
-            case ']';
+            case ']':
                 yield 'end # ]';
                 break;
         }

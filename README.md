@@ -26,9 +26,18 @@ For more cross-platform support, you can use the LLVM backend:
 
 - linux amd64
 - linux aarch64
+- riscv (RV32 assembly, suitable for RP2350 Pico SDK integration)
 - llvm
 - php (source)
 - wasm (with WASI)
+
+## RP2350 (RISC-V)
+
+Use the `riscv` backend to generate RV32 assembly:
+
+    $ bin/compile riscv examples/hello.b > hello-riscv.S
+
+For a complete RP2350 UF2 flow, see `examples/rp2350`.
 
 ## Limitations
 
@@ -45,6 +54,10 @@ Run your own.
 ## Optimizations
 
 This is not (yet) an optimizing compiler.
+
+## TODO
+
+- Rename `aarch64` target to `arm64` (keep `aarch64` as a compatibility alias).
 
 ## Acknowledgements
 

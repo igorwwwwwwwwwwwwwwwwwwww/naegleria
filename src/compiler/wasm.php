@@ -13,25 +13,25 @@ function compile($tokens) {
         }
 
         switch ($t['token']) {
-            case '>';
+            case '>':
                 yield '        (local.set $i (i32.add (local.get $i) (i32.const 4)))                         ;; >';
                 break;
-            case '<';
+            case '<':
                 yield '        (local.set $i (i32.sub (local.get $i) (i32.const 4)))                         ;; <';
                 break;
-            case '+';
+            case '+':
                 yield '        (i32.store (local.get $i) (i32.add (i32.load (local.get $i)) (i32.const 1)))  ;; +';
                 break;
-            case '-';
+            case '-':
                 yield '        (i32.store (local.get $i) (i32.sub (i32.load (local.get $i)) (i32.const 1)))  ;; -';
                 break;
-            case '.';
+            case '.':
                 yield '        (call $putchar (local.get $i))                                                ;; .';
                 break;
-            case ',';
+            case ',':
                 yield '        (call $getchar (local.get $i))                                                ;; ,';
                 break;
-            case '[';
+            case '[':
                 $loopId++;
                 $loopStack[] = $loopId;
                 yield "        (block \$loope$loopId                                                                ;; [";
@@ -41,7 +41,7 @@ function compile($tokens) {
                 }
                 yield "            (br_if \$loope$loopId (i32.eqz (i32.load (local.get \$i))))";
                 break;
-            case ']';
+            case ']':
                 $endLoopId = array_pop($loopStack);
                 yield "            br \$loops$endLoopId                                                                ;; ]";
                 yield '        ))';
