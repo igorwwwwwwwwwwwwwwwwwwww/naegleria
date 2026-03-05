@@ -9,6 +9,8 @@ project(naegleria_rp2350 C CXX ASM)
 
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 17)
+option(BF_ENABLE_TIMING "Print bf_main elapsed time in microseconds" OFF)
+option(BF_STDIO_UNBUFFERED "Use unbuffered stdout/stderr" OFF)
 
 pico_sdk_init()
 
@@ -34,6 +36,12 @@ add_executable(naegleria_rp2350
 add_dependencies(naegleria_rp2350 generate_brainfuck_asm)
 
 target_link_libraries(naegleria_rp2350 pico_stdlib)
+if (BF_ENABLE_TIMING)
+    target_compile_definitions(naegleria_rp2350 PRIVATE BF_ENABLE_TIMING=1)
+endif()
+if (BF_STDIO_UNBUFFERED)
+    target_compile_definitions(naegleria_rp2350 PRIVATE BF_STDIO_UNBUFFERED=1)
+endif()
 
 pico_enable_stdio_usb(naegleria_rp2350 1)
 pico_enable_stdio_uart(naegleria_rp2350 0)
