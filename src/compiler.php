@@ -34,6 +34,8 @@ function compile($arch, $tokens) {
             return php\compile($tokens);
         case 'ruby':
             return ruby\compile($tokens);
+        case 'riscv':
+            return riscv\compile($tokens);
         case 'wasm':
             return wasm\compile($tokens);
         default:
@@ -53,6 +55,8 @@ function template($arch, $asm) {
             return php\template($asm);
         case 'ruby':
             return ruby\template($asm);
+        case 'riscv':
+            return riscv\template($asm);
         case 'wasm':
             return wasm\template($asm);
         default:

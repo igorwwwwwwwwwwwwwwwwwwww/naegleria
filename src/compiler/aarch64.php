@@ -8,7 +8,7 @@ function compile($tokens) {
     $loopStack = [];
     foreach ($tokens as $t) {
         switch ($t['token']) {
-            case '>';
+            case '>':
                 yield ' # >';
                 yield ' adrp	x0, i';
                 yield ' add	x0, x0, :lo12:i';
@@ -18,7 +18,7 @@ function compile($tokens) {
                 yield ' add	x0, x0, :lo12:i';
                 yield ' str	w1, [x0]';
                 break;
-            case '<';
+            case '<':
                 yield ' # <';
                 yield ' adrp	x0, i';
                 yield ' add	x0, x0, :lo12:i';
@@ -28,7 +28,7 @@ function compile($tokens) {
                 yield ' add	x0, x0, :lo12:i';
                 yield ' str	w1, [x0]';
                 break;
-            case '+';
+            case '+':
                 yield ' # +';
                 yield ' adrp    x0, i';
                 yield ' add     x0, x0, :lo12:i';
@@ -43,7 +43,7 @@ function compile($tokens) {
                 yield ' sxtw    x1, w3';
                 yield ' str     w2, [x0, x1, lsl 2]';
                 break;
-            case '-';
+            case '-':
                 yield ' # -';
                 yield ' adrp    x0, i';
                 yield ' add     x0, x0, :lo12:i';
@@ -58,7 +58,7 @@ function compile($tokens) {
                 yield ' sxtw    x1, w3';
                 yield ' str     w2, [x0, x1, lsl 2]';
                 break;
-            case '.';
+            case '.':
                 yield ' # .';
                 yield ' adrp	x0, i';
                 yield ' add	x0, x0, :lo12:i';
@@ -69,7 +69,7 @@ function compile($tokens) {
                 yield ' ldr	w0, [x0, x1, lsl 2]';
                 yield ' bl	putchar';
                 break;
-            case ',';
+            case ',':
                 $condId++;
                 yield ' # ,';
                 yield ' adrp	x0, i';
@@ -108,7 +108,7 @@ function compile($tokens) {
 
                 yield ".cond$condId:";
                 break;
-            case '[';
+            case '[':
                 $loopId++;
                 $loopStack[] = $loopId;
                 yield ' # [';
@@ -123,7 +123,7 @@ function compile($tokens) {
                 yield ' cmp	w0, 0';
                 yield " beq	.loope$loopId";
                 break;
-            case ']';
+            case ']':
                 $endLoopId = array_pop($loopStack);
                 yield ' # ]';
                 yield " b .loops$endLoopId";

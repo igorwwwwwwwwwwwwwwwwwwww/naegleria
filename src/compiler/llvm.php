@@ -9,7 +9,7 @@ function compile($tokens) {
     $loopStack = [];
     foreach ($tokens as $t) {
         switch ($t['token']) {
-            case '>';
+            case '>':
                 yield '  ; >';
                 $varId++;
                 yield sprintf('  %%%d = load i32*, i32** @i, align 8', $varId);
@@ -17,7 +17,7 @@ function compile($tokens) {
                 yield sprintf('  %%%d = getelementptr inbounds i32, i32* %%%d, i32 1', $varId, $varId-1);
                 yield sprintf('  store i32* %%%d, i32** @i, align 8', $varId);
                 break;
-            case '<';
+            case '<':
                 yield '  ; <';
                 $varId++;
                 yield sprintf('  %%%d = load i32*, i32** @i, align 8', $varId);
@@ -25,7 +25,7 @@ function compile($tokens) {
                 yield sprintf('  %%%d = getelementptr inbounds i32, i32* %%%d, i32 -1', $varId, $varId-1);
                 yield sprintf('  store i32* %%%d, i32** @i, align 8', $varId);
                 break;
-            case '+';
+            case '+':
                 yield '  ; +';
                 $varId++;
                 yield sprintf('  %%%d = load i32*, i32** @i, align 8', $varId);
@@ -35,7 +35,7 @@ function compile($tokens) {
                 yield sprintf('  %%%d = add nsw i32 %%%d, 1', $varId, $varId-1);
                 yield sprintf('  store i32 %%%d, i32* %%%d, align 4', $varId, $varId-2);
                 break;
-            case '-';
+            case '-':
                 yield '  ; -';
                 $varId++;
                 yield sprintf('  %%%d = load i32*, i32** @i, align 8', $varId);
@@ -45,7 +45,7 @@ function compile($tokens) {
                 yield sprintf('  %%%d = add nsw i32 %%%d, -1', $varId, $varId-1);
                 yield sprintf('  store i32 %%%d, i32* %%%d, align 4', $varId, $varId-2);
                 break;
-            case '.';
+            case '.':
                 yield '  ; .';
                 $varId++;
                 yield sprintf('  %%%d = load i32*, i32** @i, align 8', $varId);
@@ -54,7 +54,7 @@ function compile($tokens) {
                 $varId++;
                 yield sprintf('  %%%d = call i32 @putchar(i32 %%%d)', $varId, $varId-1);
                 break;
-            case ',';
+            case ',':
                 yield '  ; ,';
                 $varId++;
                 yield sprintf('  %%%d = call i32 @getchar()', $varId);
@@ -79,7 +79,7 @@ function compile($tokens) {
 
                 yield sprintf('conde%d:', $condId);
                 break;
-            case '[';
+            case '[':
                 $loopId++;
                 $loopStack[] = $loopId;
                 yield '  ; [';
@@ -96,7 +96,7 @@ function compile($tokens) {
 
                 yield sprintf('loopb%d:', $loopId);
                 break;
-            case ']';
+            case ']':
                 $endLoopId = array_pop($loopStack);
                 yield '  ; ]';
                 yield sprintf('  br label %%loops%d, !llvm.loop !{!"llvm.loop.mustprogress"}', $endLoopId);
