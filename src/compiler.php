@@ -24,6 +24,7 @@ function tokenize($code) {
 
 function compile($arch, $tokens) {
     switch ($arch) {
+        case 'arm64':
         case 'aarch64':
             return aarch64\compile($tokens);
         case 'amd64':
@@ -45,6 +46,7 @@ function compile($arch, $tokens) {
 
 function template($arch, $asm) {
     switch ($arch) {
+        case 'arm64':
         case 'aarch64':
             return aarch64\template($asm);
         case 'amd64':

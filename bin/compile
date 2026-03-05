@@ -13,7 +13,8 @@ require __DIR__.'/../src/compiler/riscv.php';
 require __DIR__.'/../src/compiler/wasm.php';
 
 if ($argc <= 2) {
-    echo "Usage: compile (aarch64|amd64|llvm|php|ruby|riscv|wasm) filename.b\n";
+    echo "Usage: compile (arm64|amd64|llvm|php|ruby|riscv|wasm) filename.b\n";
+    echo "Alias: aarch64\n";
     exit(1);
 }
 

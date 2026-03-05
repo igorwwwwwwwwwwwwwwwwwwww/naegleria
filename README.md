@@ -25,7 +25,7 @@ For more cross-platform support, you can use the LLVM backend:
 ## Platforms
 
 - linux amd64
-- linux aarch64
+- linux arm64 (alias: `aarch64`)
 - riscv (RV32 assembly, suitable for RP2350 Pico SDK integration)
 - llvm
 - php (source)
@@ -54,10 +54,6 @@ Run your own.
 ## Optimizations
 
 This is not (yet) an optimizing compiler.
-
-## TODO
-
-- Rename `aarch64` target to `arm64` (keep `aarch64` as a compatibility alias).
 
 ## Acknowledgements
 
