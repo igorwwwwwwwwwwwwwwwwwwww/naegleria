@@ -20,7 +20,7 @@ source ./deps/env.sh
 One-liner (setup + build + flash):
 
 ```sh
-(cd examples/rp2350 && ./fetch-deps.sh && source ./deps/env.sh && cmake -S . -B build-riscv -DPICO_BOARD=pico2 -DPICO_PLATFORM=rp2350-riscv && cmake --build build-riscv -j && cmake --build build-riscv --target flash)
+(cd examples/rp2350 && ./fetch-deps.sh && source ./deps/env.sh && rm -rf build-riscv && cmake -S . -B build-riscv -DPICO_BOARD=pico2 -DPICO_PLATFORM=rp2350-riscv && cmake --build build-riscv -j && cmake --build build-riscv --target flash)
 ```
 
 ## Build
