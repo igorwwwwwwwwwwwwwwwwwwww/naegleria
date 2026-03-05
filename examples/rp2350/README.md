@@ -66,3 +66,41 @@ picocom -b 115200 --imap lfcrlf /dev/cu.usbmodem1101
 Open serial before reset/flash, otherwise short output can be missed.
 
 Hardware UART also works at `115200 8N1` (3.3V USB-UART adapter, TX/RX/GND).
+
+For `cat.b` echo tests, use output mapping too so Enter behaves like a newline:
+
+```sh
+picocom -b 115200 --imap lfcrlf --omap crcrlf /dev/cu.usbmodem1101
+```
+
+## Debug (OpenOCD + GDB)
+
+Use an OpenOCD build with RP2350 support (for example Raspberry Pi OpenOCD).
+Homebrew OpenOCD may only ship `rp2040` target scripts.
+
+Start OpenOCD (example using a local `../openocd` clone):
+
+```sh
+cd ../openocd
+./src/openocd -s tcl -f interface/cmsis-dap.cfg -f target/rp2350-riscv.cfg
+```
+
+In another terminal, start RISC-V GDB (not `arm-none-eabi-gdb`):
+
+```sh
+examples/rp2350/deps/riscv-toolchain/bin/riscv32-unknown-elf-gdb -q \
+  -ex "file /Users/igor/code/naegleria/examples/rp2350/build-riscv/naegleria_rp2350.elf" \
+  -ex "target extended-remote :3333" \
+  -ex "monitor reset halt" \
+  -ex "thbreak main"
+```
+
+Useful commands:
+
+```gdb
+continue
+bt
+info reg
+```
+
+If GDB stops in `_exit`, that usually means the program ended normally.

@@ -36,7 +36,7 @@ add_dependencies(naegleria_rp2350 generate_brainfuck_asm)
 target_link_libraries(naegleria_rp2350 pico_stdlib)
 
 pico_enable_stdio_usb(naegleria_rp2350 1)
-pico_enable_stdio_uart(naegleria_rp2350 1)
+pico_enable_stdio_uart(naegleria_rp2350 0)
 
 pico_add_extra_outputs(naegleria_rp2350)
 
@@ -44,6 +44,7 @@ find_program(PICOTOOL picotool)
 if (PICOTOOL)
     add_custom_target(flash
         COMMAND ${PICOTOOL} load -f $<TARGET_FILE:naegleria_rp2350>
+        COMMAND ${PICOTOOL} reboot
         DEPENDS naegleria_rp2350
         USES_TERMINAL
         COMMENT "Flashing naegleria_rp2350 via picotool"
